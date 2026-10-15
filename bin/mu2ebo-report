@@ -1,0 +1,14 @@
+#!/bin/bash
+# mu2ebo-report: run the reporter with Mu2eBO's interpreter (the sibling checkout's activate.sh, else ana 2.8.0).
+here="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/.." && pwd)"
+if [[ -z "${MU2EBO_ROOT:-}" ]]; then
+  for d in "$here/../autoresearch" "$here/../Mu2eBO"; do
+    [[ -f "$d/service/server.py" ]] && { MU2EBO_ROOT="$(cd "$d" && pwd)"; export MU2EBO_ROOT; break; }
+  done
+fi
+if [[ -z "${AUTORESEARCH_PYTHON:-}" && -f "${MU2EBO_ROOT:-/nonexistent}/activate.sh" ]]; then
+  # shellcheck disable=SC1091
+  source "$MU2EBO_ROOT/activate.sh" >/dev/null || exit 1
+fi
+py="${AUTORESEARCH_PYTHON:-/cvmfs/mu2e.opensciencegrid.org/env/ana/2.8.0/bin/python}"
+PYTHONPATH="$here" exec "$py" -m mu2ebo_reporter "$@"

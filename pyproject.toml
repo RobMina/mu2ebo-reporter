@@ -1,0 +1,22 @@
+[project]
+name = "mu2ebo-reporter"
+version = "0.1.0"
+description = "Harness-neutral reporting agent for Mu2eBO Bayesian-optimization campaigns"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.11"
+# All of these ship in the Mu2e ana 2.8.0 environment on /cvmfs, Mu2eBO's default interpreter.
+dependencies = ["mcp>=2.0", "openai>=1.40", "anyio>=4"]
+
+[project.scripts]
+mu2ebo-report = "mu2ebo_reporter.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["mu2ebo_reporter*"]
+
+[tool.setuptools.package-data]
+mu2ebo_reporter = ["prompts/*.md"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
